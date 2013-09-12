@@ -1,0 +1,32 @@
+\ProvidesFile{jgo.bbx}[2013/09/04 v1.0 Jahrbücher für Geschichte Osteuropas (JGO) ]
+\RequireBibliographyStyle{authortitle}
+
+\DeclareFieldFormat{title}{#1\isdot}
+\DeclareFieldFormat[article]{title}{#1}
+\DeclareFieldFormat[book]{title}{#1}
+\DeclareFieldFormat[collection]{title}{#1}
+\DeclareFieldFormat[periodical]{title}{#1}
+
+\DeclareFieldFormat{booktitle}{#1\isdot}
+\DeclareFieldFormat{journaltitle}{#1\isdot}
+\DeclareFieldFormat{issuetitle}{#1\isdot}
+\DeclareFieldFormat{maintitle}{#1\isdot}
+
+% Set author in small caps
+\renewcommand*{\mkbibnamelast}[1]{\textsc{#1}}
+\renewcommand*{\mkbibnamefirst}[1]{\textsc{#1}}
+
+% no period after author
+\renewcommand*{\labelnamepunct}{}
+
+% slash instead of 'and' separating authors
+\renewcommand*{\multinamedelim}{\addslash}
+\renewcommand*{\finalnamedelim}{\addslash}
+\renewcommand*{\multilistdelim}{\addslash}
+\renewcommand*{\finallistdelim}{\addslash}
+
+% title follows name directly
+\renewcommand*{\nametitledelim}{\addspace}
+
+\endinput
+

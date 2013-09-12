@@ -1,0 +1,46 @@
+\ProvidesFile{jgo.cbx}[2013/09/04 v1.0 Jahrbücher für Geschichte Osteuropas (JGO) ]
+\RequireCitationStyle{authortitle}
+
+\DeclareFieldFormat{citetitle}{#1\isdot}
+\DeclareFieldFormat[article]{citetitle}{#1}
+\DeclareFieldFormat[book]{citetitle}{#1}
+\DeclareFieldFormat[collection]{citetitle}{#1}
+\DeclareFieldFormat[periodical]{citetitle}{#1}
+
+% Set author in small caps
+\renewcommand*{\mkbibnamelast}[1]{\textsc{#1}}
+
+% no period after author
+\renewcommand*{\labelnamepunct}{}
+
+% slash instead of 'and' separating authors
+\renewcommand*{\multinamedelim}{\addslash}
+\renewcommand*{\finalnamedelim}{\addslash}
+\renewcommand*{\multilistdelim}{\addslash}
+\renewcommand*{\finallistdelim}{\addslash}
+
+% title follows name directly
+\renewcommand*{\nametitledelim}{\addspace}
+
+% textcite without parentheses
+\newbibmacro*{textcite}{%
+\iffieldundef{shorthand}
+    {\ifnameundef{labelname}
+       {}
+       {\printnames{labelname}%
+        \setunit{\nametitledelim}}%
+     \usebibmacro{cite:title}}%
+    {\usebibmacro{cite:shorthand}}}
+
+% textcite without parentheses
+\newbibmacro*{parencite}{%
+\iffieldundef{shorthand}
+    {\ifnameundef{labelname}
+       {}
+       {\printnames{labelname}%
+        \setunit{\nametitledelim}}%
+     \usebibmacro{cite:title}}%
+    {\usebibmacro{cite:shorthand}}}
+
+\endinput
+
