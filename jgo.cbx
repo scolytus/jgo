@@ -1,46 +1,133 @@
-\ProvidesFile{jgo.cbx}[2013/09/04 v1.0 Jahrbücher für Geschichte Osteuropas (JGO) ]
-\RequireCitationStyle{authortitle}
+% This file is based on authortitle.cbx taken from
+% https://github.com/plk/biblatex version 03942b38
+%
+% Copyright (c) 2006-2012 Philipp Lehman
+% Copyright (c) 2012-present Philip Lehman, Joseph Wright, Audrey Boruvka, Philip Kime
+% Copyright (c) 2013-present Michael Gissing
+%
+% Permission is granted to copy,
+% distribute and/or modify this software under the terms of the LaTeX
+% Project Public License (LPPL), version 1.3. This software is provided
+% 'as is', without warranty of any kind, either expressed or implied,
+% including, but not limited to, the implied warranties of
+% merchantability and fitness for a particular purpose.
+%
 
-\DeclareFieldFormat{citetitle}{#1\isdot}
-\DeclareFieldFormat[article]{citetitle}{#1}
-\DeclareFieldFormat[book]{citetitle}{#1}
-\DeclareFieldFormat[collection]{citetitle}{#1}
-\DeclareFieldFormat[periodical]{citetitle}{#1}
+\ProvidesFile{jgo.cbx}[2013/09/12 v2.0 Jahrbücher für Geschichte Osteuropas (JGO)]
 
-% Set author in small caps
-\renewcommand*{\mkbibnamelast}[1]{\textsc{#1}}
+\ExecuteBibliographyOptions{uniquename,uniquelist,autocite=footnote}
 
-% no period after author
-\renewcommand*{\labelnamepunct}{}
+\renewcommand*{\iffinalcitedelim}{\iflastcitekey}
 
-% slash instead of 'and' separating authors
-\renewcommand*{\multinamedelim}{\addslash}
-\renewcommand*{\finalnamedelim}{\addslash}
-\renewcommand*{\multilistdelim}{\addslash}
-\renewcommand*{\finallistdelim}{\addslash}
+\newbool{cbx:parens}
 
-% title follows name directly
-\renewcommand*{\nametitledelim}{\addspace}
+\newbibmacro*{cite}{%
+  \iffieldundef{shorthand}
+    {\ifnameundef{labelname}
+       {}
+       {\printnames{labelname}%
+        \setunit{\nametitledelim}}%
+     \usebibmacro{cite:title}}%
+    {\usebibmacro{cite:shorthand}}}
 
-% textcite without parentheses
+\newbibmacro*{citetitle}{%
+  \iffieldundef{shorthand}
+    {\usebibmacro{cite:title}}%
+    {\usebibmacro{cite:shorthand}}}
+
 \newbibmacro*{textcite}{%
-\iffieldundef{shorthand}
-    {\ifnameundef{labelname}
-       {}
-       {\printnames{labelname}%
-        \setunit{\nametitledelim}}%
-     \usebibmacro{cite:title}}%
+  \ifnameundef{labelname}
+    {}
+    {\printnames{labelname}%
+     \setunit{%
+       \global\booltrue{cbx:parens}%
+       \addspace\bibopenparen}}%
+  \ifnumequal{\value{citecount}}{1}
+    {\usebibmacro{prenote}}
+    {}%
+  \iffieldundef{shorthand}
+    {\usebibmacro{cite:title}}%
     {\usebibmacro{cite:shorthand}}}
 
-% textcite without parentheses
-\newbibmacro*{parencite}{%
-\iffieldundef{shorthand}
-    {\ifnameundef{labelname}
-       {}
-       {\printnames{labelname}%
-        \setunit{\nametitledelim}}%
-     \usebibmacro{cite:title}}%
-    {\usebibmacro{cite:shorthand}}}
+\newbibmacro*{cite:title}{%
+  \printtext[bibhyperref]{%
+    \printfield[citetitle]{labeltitle}}}
+
+\newbibmacro*{cite:shorthand}{%
+  \printtext[bibhyperref]{\printfield{shorthand}}}
+
+\newbibmacro*{textcite:postnote}{%
+  \iffieldundef{postnote}
+    {\ifbool{cbx:parens}
+       {\bibcloseparen}
+       {}}
+    {\ifbool{cbx:parens}
+       {\postnotedelim}
+       {\addspace\bibopenparen}%
+     \printfield{postnote}\bibcloseparen}}
+
+\DeclareCiteCommand{\cite}
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand*{\cite}
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{citetitle}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\parencite}[\mkbibparens]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand*{\parencite}[\mkbibparens]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{citetitle}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\footcite}[\mkbibfootnote]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\footcitetext}[\mkbibfootnotetext]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\smartcite}[\iffootnote\mkbibparens\mkbibfootnote]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareCiteCommand{\textcite}
+  {\boolfalse{cbx:parens}}
+  {\usebibmacro{citeindex}%
+   \iffirstcitekey
+     {\setcounter{textcitetotal}{1}}
+     {\stepcounter{textcitetotal}%
+      \textcitedelim}%
+   \usebibmacro{textcite}}
+  {\ifbool{cbx:parens}
+     {\bibcloseparen\global\boolfalse{cbx:parens}}
+     {}}
+  {\usebibmacro{textcite:postnote}}
+
+\DeclareMultiCiteCommand{\textcites}{\textcite}{}
 
 \endinput
-
